@@ -1,0 +1,65 @@
+enterprise-med-agent/
+├─ README.md
+├─ docker-compose.yml
+├─ .env.example
+├─ pyproject.toml
+├─ Makefile
+├─ configs/
+│  ├─ app.yaml
+│  ├─ models.yaml
+│  ├─ policies.yaml
+│  ├─ prompts/
+│  │  ├─ clinical_note.md
+│  │  └─ safety_guard.md
+│  └─ schemas/                 # 全部契约统一放这里
+│     ├─ common.json
+│     ├─ m1_auth.json
+│     ├─ m2_ingest.json
+│     ├─ m3_index.json
+│     ├─ m4_retrieve.json
+│     ├─ m5_tools.json
+│     ├─ m6_agent.json
+│     ├─ m7_orchestrator.json
+│     ├─ m8_llm_router.json
+│     ├─ m9_memory.json
+│     └─ m10_eval.json
+├─ src/
+│  ├─ api/                     # FastAPI/HTTP 入口
+│  │  ├─ main.py
+│  │  ├─ routes_agent.py
+│  │  ├─ routes_admin.py
+│  │  └─ middleware_audit.py
+│  ├─ core/
+│  │  ├─ logging.py
+│  │  ├─ tracing.py
+│  │  ├─ errors.py
+│  │  └─ schema_validation.py
+│  ├─ modules/
+│  │  ├─ m1_authz/             # 1) 身份/权限/脱敏
+│  │  ├─ m2_ingest/            # 2) 数据接入(结构化/文档/影像/时序)
+│  │  ├─ m3_index/             # 3) 索引构建(向量/倒排/元数据)
+│  │  ├─ m4_retrieve/          # 4) RAG++ 检索与引用
+│  │  ├─ m5_tools/             # 5) Tool Registry & Execution
+│  │  ├─ m6_agent/             # 6) Agent(规划/执行/重试)
+│  │  ├─ m7_orchestrator/      # 7) 业务工作流编排(临床/科研/运营)
+│  │  ├─ m8_llm_router/        # 8) 多模型路由/降级/限流
+│  │  ├─ m9_memory/            # 9) 长期记忆(可审计)
+│  │  └─ m10_eval/             # 10) 评测与监控指标
+│  ├─ adapters/
+│  │  ├─ db/                   # Postgres/MySQL/ClickHouse
+│  │  ├─ vectorstore/          # Milvus/FAISS
+│  │  ├─ llm/                  # Qwen/GLM/OpenAI等
+│  │  ├─ vlm/                  # VLM 推理适配
+│  │  └─ storage/              # MinIO/本地文件
+│  └─ jobs/
+│     ├─ batch_ingest.py
+│     ├─ rebuild_index.py
+│     └─ offline_eval.py
+├─ tests/
+│  ├─ contract/                # 契约测试：schema + golden examples
+│  ├─ integration/
+│  └─ e2e/
+└─ docs/
+   ├─ architecture.md
+   ├─ security_compliance.md
+   └─ runbook.md
