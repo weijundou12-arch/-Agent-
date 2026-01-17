@@ -1,0 +1,64 @@
+数据层：给你“具体到表和字段”的数据（每一步都用得到）
+1）结构化表（HIS/EMR/LIS）
+
+示例：住院患者基本表 inpatient_adm
+
+字段	例子
+patient_id	P00087321
+adm_id	A2026-001928
+dept	ICU
+adm_time	2026-01-12 09:43
+dx_icd10	J18.9; A41.9
+discharge_time	null
+
+医嘱表 orders
+
+字段	例子
+order_id	O881291
+adm_id	A2026-001928
+drug_name	哌拉西林他唑巴坦
+dose	4.5g
+freq	q8h
+start_time	2026-01-13 10:00
+indication_text	肺部感染？
+
+检验表 lab_results
+
+字段	例子
+lab_id	L772901
+adm_id	A2026-001928
+item	CRP
+value	156
+unit	mg/L
+sample_time	2026-01-14 06:30
+
+2）非结构化文本（病程/影像报告）
+
+病程片段 notes
+
+note_id=N9912
+
+text=“患者昨夜发热 39.2℃，痰多黄稠，WBC 升高，拟升级抗菌方案…”
+
+影像报告 pacs_reports
+
+report_text=“双下肺斑片状影，考虑感染；建议复查。”
+
+3）时序数据（生命体征/护理记录）
+
+表 vitals_ts（每 1–4 小时一条）
+
+time	temp	hr	rr	spo2	map
+01-14 00:00	38.7	118	26	90	62
+01-14 04:00	39.2	125	28	88	58
+01-14 08:00	38.9	120	24	92	65
+
+4）知识库（指南/制度）
+
+《抗菌药物临床应用指导原则（最新版）》
+
+院内《ICU 抗菌药物分级管理制度》
+
+药品说明书 PDF
+
+科研方法 SOP（缺失处理、PSM、加权模型等）
