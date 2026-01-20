@@ -63,3 +63,330 @@ enterprise-med-agent/
    ├─ architecture.md
    ├─ security_compliance.md
    └─ runbook.md
+根目录
+README.md
+
+目的：项目门面与上手指南
+
+内容：系统能力简介、架构图、快速运行、API 示例、评测指标、Roadmap
+
+面试价值：让面试官 2 分钟理解你做的是“企业级 Agent 平台”，不是 Demo
+
+docker-compose.yml
+
+目的：一键起服务（以及后续可扩展依赖）
+
+典型内容：app +（可选）Postgres/Milvus/MinIO/OpenSearch
+
+价值：体现你对私有化部署/可复现环境的理解（中国 ToB 很看重）
+
+.env.example
+
+目的：环境变量模板（不泄露真实密钥）
+
+典型变量：模型地址、DB 连接、向量库地址、S3/MinIO、日志级别、feature flags
+
+价值：配置与代码分离，符合工程规范
+
+pyproject.toml
+
+目的：Python 项目元数据与依赖管理（可替代 requirements.txt）
+
+内容：包名、版本、依赖、pytest 配置、lint/format 配置（可选）
+
+价值：标准化依赖，便于 CI/CD
+
+Makefile
+
+目的：常用命令封装
+
+例：make run / test / lint / fmt / build
+
+价值：降低协作成本，体现工程素养
+
+configs/ 配置层（“可调可控”，避免硬编码）
+configs/app.yaml
+
+目的：应用级配置
+
+典型内容：服务名、环境、schema 路径、prompts 路径、日志/审计开关等
+
+configs/models.yaml
+
+目的：模型清单与推理端点配置
+
+典型内容：本地模型/云模型/专用模型（VLM）名称、URL、超参、fallback 顺序
+
+价值：多模型编排的“路由表”来源
+
+configs/policies.yaml
+
+目的：合规/安全/业务策略配置
+
+典型内容：
+
+PII 禁止外发策略
+
+角色权限策略（科室/身份可见范围）
+
+工具白名单、危险操作拦截
+
+价值：企业落地的核心（中国尤其重要）
+
+configs/prompts/clinical_note.md
+
+目的：临床病程/业务文书生成模板
+
+作用：统一输出格式（SOAP/报告结构），减少幻觉与风格漂移
+
+价值：提示工程可配置、可 A/B
+
+configs/prompts/safety_guard.md
+
+目的：安全护栏提示（非代码层的规则补充）
+
+作用：明确“不直接下医嘱/必须引用/禁止输出 PII”等
+
+configs/schemas/（契约中心：最重要的工程资产之一）
+
+所有模块之间的输入输出都通过 schema 固化，保证可测试、可升级、可协作。
+
+common.json
+
+目的：通用对象定义（meta、audit、citation 等）
+
+价值：全系统一致的 trace/audit/citation 结构
+
+m1_auth.json … m10_eval.json
+
+目的：每个模块的请求/响应契约
+
+价值：
+
+可做 contract tests（防止接口随意改导致联调崩）
+
+未来可生成 API 文档/Mock 服务
+
+能体现你是“系统工程”不是“写脚本”
+
+src/ 业务代码层
+src/api/（HTTP 入口层）
+src/api/main.py
+
+目的：FastAPI 应用启动入口
+
+内容：注册路由、挂中间件、health check
+
+src/api/routes_agent.py
+
+目的：面向业务侧的“Agent 调用接口”
+
+典型：/agent/run、/workflow/run
+
+价值：把核心能力提供为稳定 API
+
+src/api/routes_admin.py
+
+目的：管理/运维/平台接口
+
+典型：索引重建、批量接入、评测运行、策略查询等
+
+价值：体现 ToB 平台化思维（不是单一功能）
+
+src/api/middleware_audit.py
+
+目的：审计中间件（链路追踪 + 统一记录）
+
+典型：
+
+从请求 meta/header 获取 trace_id
+
+汇总响应 audit 事件
+
+统一落日志/落库（生产）
+
+价值：合规、可追溯、可复盘（中国落地关键）
+
+src/core/（核心基础设施：全项目复用）
+src/core/logging.py
+
+目的：统一日志（格式、级别、结构化字段）
+
+价值：生产排障靠它
+
+src/core/tracing.py
+
+目的：trace_id/request_id 生成与传递
+
+价值：把一次请求贯穿 10 个模块，支持回放与审计
+
+src/core/errors.py
+
+目的：统一异常类型（SchemaError、ToolError…）
+
+价值：错误可控、可分类、便于告警
+
+src/core/schema_validation.py
+
+目的：加载 schemas 并对输入输出做校验
+
+价值：把“契约”变成强约束（减少线上事故）
+
+src/modules/（10 个业务模块：清晰职责边界）
+
+每个模块目录下通常包含 service.py（核心逻辑）、__init__.py（包标识）、可选 schemas.py/logic.py 等。
+
+m1_authz/ 身份/权限/脱敏
+
+目的：谁能访问什么、输出要不要脱敏
+
+关键产物：allowed + redacted_payload + audit
+
+m2_ingest/ 数据接入
+
+目的：把结构化/文档/影像/时序数据接入平台（批量/实时）
+
+生产会做：解析、清洗、写入 storage/db、生成 item_refs
+
+m3_index/ 索引构建
+
+目的：把文档变成可检索资产（chunk + embedding + 索引）
+
+生产会做：向量索引 + 倒排索引 + 元数据索引
+
+m4_retrieve/ RAG++ 检索与引用
+
+目的：返回结构化事实 + 文档证据片段（带 citation）
+
+价值：可信输出的基础（可引用）
+
+m5_tools/ Tool Registry & Execution
+
+目的：统一工具调用入口（SQL/API/Python/VLM…）
+
+生产会做：权限、参数校验、沙箱、限流、审计
+
+m6_agent/ Agent（规划/执行/重试）
+
+目的：把任务拆解成多步调用（tools + retrieve + generation）
+
+价值：从“回答”变“执行”，是平台核心
+
+m7_orchestrator/ 工作流编排
+
+目的：把 Agent 封装成具体业务流程（临床/科研/运营）
+
+价值：产品化入口（让业务直接用）
+
+m8_llm_router/ 多模型路由/降级/限流
+
+目的：根据任务、敏感性、成本、负载选择模型
+
+价值：中国私有化落地必备（稳定+成本可控）
+
+m9_memory/ 长期记忆（可审计）
+
+目的：保存偏好/任务状态/上下文（可控可删）
+
+价值：实现多轮、多天任务连续性
+
+m10_eval/ 评测与监控指标
+
+目的：离线/在线评估（引用正确率、工具成功率、延迟、成本等）
+
+价值：让系统可运营、可迭代（企业必须）
+
+src/adapters/（外部系统适配层：可替换）
+
+让核心业务不依赖具体厂商/组件，方便私有化部署与换型。
+
+adapters/db/
+
+目的：对接 Postgres/MySQL/ClickHouse 等
+
+接口：query/execute、连接池、重试
+
+adapters/vectorstore/
+
+目的：对接 Milvus/FAISS 等向量库
+
+接口：upsert/search、命名空间、权限过滤
+
+adapters/llm/
+
+目的：对接 Qwen/GLM/OpenAI/自建推理服务
+
+接口：generate/chat、stream、token 计费统计
+
+adapters/vlm/
+
+目的：对接多模态推理（扫描件/影像截图结构化）
+
+接口：extract/grounding（可扩展）
+
+adapters/storage/
+
+目的：对接 MinIO/S3/本地文件
+
+接口：put/get、版本、生命周期策略
+
+src/jobs/（离线任务/运维任务）
+batch_ingest.py
+
+目的：批量接入（文档/数据）
+
+生产：定时/增量同步、失败重试、落库
+
+rebuild_index.py
+
+目的：重建索引（版本更新、策略更新、召回下降时）
+
+生产：可跑在 CI/定时任务/运维平台
+
+offline_eval.py
+
+目的：离线评测回放（对比版本、回归测试）
+
+生产：输出报告 + 指标看板数据
+
+tests/ 测试层（工程可信度）
+tests/contract/
+
+目的：契约测试（schema + golden examples）
+
+价值：改任何模块接口都会被测试拦住（非常 ToB）
+
+tests/integration/
+
+目的：集成测试（模块联通：retrieve→agent→workflow）
+
+价值：防止“单测过了但联调挂了”
+
+tests/e2e/
+
+目的：端到端（起服务→发 HTTP 请求→验输出）
+
+价值：模拟真实部署路径，适合 CI
+
+docs/ 文档层（面试/交付/运维关键）
+docs/architecture.md
+
+目的：架构说明、模块交互、数据流
+
+价值：面试“系统讲解”核心材料
+
+docs/security_compliance.md
+
+目的：安全与合规策略说明
+
+内容：权限模型、PII 策略、审计留痕、输出限制、工具治理
+
+价值：中国医疗/ToB 重点考核项
+
+docs/runbook.md
+
+目的：运维手册
+
+内容：启动/配置/排障/常见问题/升级步骤
+
+价值：体现你能把系统交付给别人跑起来
