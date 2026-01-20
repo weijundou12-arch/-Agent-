@@ -1,0 +1,37 @@
+{
+  "$id": "m6_agent.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "task": { "type": "string" },
+        "inputs": { "type": "object" },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "max_steps": { "type": "integer" },
+            "max_tool_calls": { "type": "integer" },
+            "must_cite": { "type": "boolean" }
+          },
+          "required": ["max_steps","max_tool_calls","must_cite"]
+        }
+      },
+      "required": ["meta","task","inputs","constraints"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "final_answer": { "type": "string" },
+        "plan": { "type": "array", "items": { "type": "string" } },
+        "tool_calls": { "type": "array", "items": { "type": "object" } },
+        "citations": { "type": "array", "items": { "$ref": "common.json#/definitions/Citation" } },
+        "status": { "type": "string" },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["final_answer","plan","tool_calls","citations","status","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
