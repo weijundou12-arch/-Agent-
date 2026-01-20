@@ -1,0 +1,27 @@
+{
+  "$id": "m8_llm_router.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "task_type": { "type": "string" },
+        "policy_flags": { "type": "object" },
+        "input": { "type": "object" }
+      },
+      "required": ["meta","task_type","policy_flags","input"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "model_selected": { "type": "string" },
+        "fallback_chain": { "type": "array", "items": { "type": "string" } },
+        "limits": { "type": "object" },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["model_selected","fallback_chain","limits","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
