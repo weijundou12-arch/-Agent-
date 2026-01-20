@@ -1,0 +1,25 @@
+{
+  "$id": "m10_eval.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "mode": { "type": "string" },
+        "metrics": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["meta","mode","metrics"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "metric_results": { "type": "object" },
+        "report_ref": { "type": "string" },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["metric_results","report_ref","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
