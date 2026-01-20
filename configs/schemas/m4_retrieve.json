@@ -1,0 +1,40 @@
+{
+  "$id": "m4_retrieve.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "query": { "type": "string" },
+        "retrieve_params": {
+          "type": "object",
+          "properties": { "k": { "type": "integer" }, "rerank": { "type": "boolean" } },
+          "required": ["k","rerank"]
+        },
+        "context": { "type": "object" }
+      },
+      "required": ["meta","query","retrieve_params","context"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "structured_facts": { "type": "object" },
+        "snippets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "citation": { "$ref": "common.json#/definitions/Citation" }
+            },
+            "required": ["text","citation"]
+          }
+        },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["structured_facts","snippets","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
