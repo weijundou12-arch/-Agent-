@@ -1,0 +1,32 @@
+{
+  "$id": "m3_index.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "index_job_id": { "type": "string" },
+        "doc_refs": { "type": "array", "items": { "type": "string" } },
+        "chunking": {
+          "type": "object",
+          "properties": { "strategy": { "type": "string" }, "max_tokens": { "type": "integer" } },
+          "required": ["strategy","max_tokens"]
+        }
+      },
+      "required": ["meta","index_job_id","doc_refs","chunking"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "index_job_id": { "type": "string" },
+        "chunks_created": { "type": "integer" },
+        "vector_index": { "type": "string" },
+        "bm25_index": { "type": "string" },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["index_job_id","chunks_created","vector_index","bm25_index","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
