@@ -1,0 +1,51 @@
+1) 契约通用：common.json（所有模块共享）
+
+放在 configs/schemas/common.json，其他 schema 用 $ref 引用即可（这里直接给最关键字段）。
+
+{
+  "$id": "common.json",
+  "type": "object",
+  "definitions": {
+    "RequestMeta": {
+      "type": "object",
+      "properties": {
+        "request_id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "tenant_id": { "type": "string" },
+        "user_id": { "type": "string" },
+        "role": { "type": "string", "enum": ["doctor","nurse","pharmacist","researcher","admin"] },
+        "dept": { "type": "string" },
+        "trace_id": { "type": "string" }
+      },
+      "required": ["request_id","timestamp","tenant_id","user_id","role","dept","trace_id"]
+    },
+    "AuditEvent": {
+      "type": "object",
+      "properties": {
+        "event_type": { "type": "string" },
+        "ref_ids": { "type": "array", "items": { "type": "string" } },
+        "hash": { "type": "string" },
+        "detail": { "type": "object" }
+      },
+      "required": ["event_type"]
+    },
+    "Citation": {
+      "type": "object",
+      "properties": {
+        "doc_id": { "type": "string" },
+        "section": { "type": "string" },
+        "span": { "type": "string" },
+        "score": { "type": "number" }
+      },
+      "required": ["doc_id","section","span"]
+    },
+    "PII": {
+      "type": "object",
+      "properties": {
+        "contains_pii": { "type": "boolean" },
+        "pii_types": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["contains_pii"]
+    }
+  }
+}
