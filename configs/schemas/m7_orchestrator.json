@@ -1,0 +1,26 @@
+{
+  "$id": "m7_orchestrator.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "workflow": { "type": "string" },
+        "params": { "type": "object" }
+      },
+      "required": ["meta","workflow","params"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "workflow": { "type": "string" },
+        "artifacts": { "type": "array", "items": { "type": "object" } },
+        "summary": { "type": "string" },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["workflow","artifacts","summary","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
