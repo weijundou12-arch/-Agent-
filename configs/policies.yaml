@@ -1,0 +1,10 @@
+policies:
+  pii:
+    forbid_external: true
+    redact_fields:
+      - name
+      - id_number
+      - phone
+  authz:
+    deny_patient_record_roles:
+      - researcher
