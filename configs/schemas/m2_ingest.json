@@ -1,0 +1,27 @@
+{
+  "$id": "m2_ingest.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "source": { "type": "string" },
+        "data_type": { "type": "string" },
+        "items": { "type": "array", "items": { "type": "object" } }
+      },
+      "required": ["meta","source","data_type","items"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "accepted": { "type": "integer" },
+        "rejected": { "type": "integer" },
+        "item_refs": { "type": "array", "items": { "type": "string" } },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["accepted","rejected","item_refs","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
