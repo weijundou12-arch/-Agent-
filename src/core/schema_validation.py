@@ -1,3 +1,5 @@
+通用：Schema 校验 + 假数据
+
 from __future__ import annotations
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
