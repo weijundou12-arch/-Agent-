@@ -1,0 +1,6 @@
+app:
+  name: "enterprise-med-agent"
+  env: "dev"
+  log_level: "INFO"
+  schema_dir: "configs/schemas"
+  prompts_dir: "configs/prompts"
