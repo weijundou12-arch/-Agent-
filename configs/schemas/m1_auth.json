@@ -1,0 +1,36 @@
+{
+  "$id": "m1_auth.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "action": { "type": "string" },
+        "resource": {
+          "type": "object",
+          "properties": {
+            "resource_type": { "type": "string" },
+            "resource_id": { "type": "string" }
+          },
+          "required": ["resource_type","resource_id"]
+        },
+        "payload": { "type": "object" }
+      },
+      "required": ["meta","action","resource","payload"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "redacted_payload": { "type": "object" },
+        "audit": {
+          "type": "array",
+          "items": { "$ref": "common.json#/definitions/AuditEvent" }
+        }
+      },
+      "required": ["allowed","redacted_payload","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
