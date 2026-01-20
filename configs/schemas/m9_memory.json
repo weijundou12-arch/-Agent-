@@ -1,0 +1,27 @@
+{
+  "$id": "m9_memory.json",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "meta": { "$ref": "common.json#/definitions/RequestMeta" },
+        "op": { "type": "string" },
+        "namespace": { "type": "string" },
+        "key": { "type": "string" },
+        "value": { "type": "object" }
+      },
+      "required": ["meta","op","namespace","key"]
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "ok": { "type": "boolean" },
+        "value": { "type": "object" },
+        "audit": { "type": "array", "items": { "$ref": "common.json#/definitions/AuditEvent" } }
+      },
+      "required": ["ok","value","audit"]
+    }
+  },
+  "required": ["request","response"]
+}
