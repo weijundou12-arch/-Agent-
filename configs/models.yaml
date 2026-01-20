@@ -1,0 +1,4 @@
+models:
+  local_primary: "qwen2.5-72b-local"
+  local_fallback: "qwen2.5-32b-local"
+  cloud_fallback: "gpt-4o-mini-cloud"
